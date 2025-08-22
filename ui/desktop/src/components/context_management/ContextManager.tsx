@@ -19,7 +19,6 @@ interface ContextManagerActions {
     messages: Message[],
     setMessages: (messages: Message[]) => void,
     append?: (message: Message) => void,
-    clearAlerts?: () => void,
     setAncestorMessages?: (messages: Message[]) => void
   ) => Promise<void>;
   hasCompactionMarker: (message: Message) => boolean;
@@ -134,14 +133,8 @@ export const ContextManagerProvider: React.FC<{ children: React.ReactNode }> = (
       messages: Message[],
       setMessages: (messages: Message[]) => void,
       append?: (message: Message) => void,
-      clearAlerts?: () => void,
       setAncestorMessages?: (messages: Message[]) => void
     ) => {
-      // Hide the alert box when compaction starts
-      if (clearAlerts) {
-        clearAlerts();
-      }
-
       await performCompaction(
         messages,
         setMessages,

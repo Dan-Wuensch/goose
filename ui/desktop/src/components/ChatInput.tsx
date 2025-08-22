@@ -515,17 +515,24 @@ export default function ChatInput({
     clearAlerts();
 
     // Only show context window alert if there are tokens being used
-    if (numTokens && numTokens > 0) {
+    if ((numTokens && numTokens > 0) || (isTokenLimitLoaded && tokenLimit)) {
+      // in these conditions we want it to be present but disabled
+      const compactButtonDisabled = !numTokens || isCompacting;
+
       addAlert({
         type: AlertType.Info,
         message: 'Context window',
         progress: {
-          current: numTokens,
+          current: numTokens || 0,
           total: tokenLimit,
         },
         showCompactButton: true,
+        compactButtonDisabled,
         onCompact: () => {
-          handleManualCompaction(messages, setMessages, append, clearAlerts, setAncestorMessages);
+          // Hide the alert popup by dispatching a custom event that the popover can listen to
+          // Importantly, this leaves the alert so the dot still shows up, but hides the popover
+          window.dispatchEvent(new CustomEvent('hide-alert-popover'));
+          handleManualCompaction(messages, setMessages, append, setAncestorMessages);
         },
         compactIcon: <ScrollText size={12} />,
       });
@@ -545,7 +552,7 @@ export default function ChatInput({
     }
     // We intentionally omit setView as it shouldn't trigger a re-render of alerts
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [numTokens, toolCount, tokenLimit, isTokenLimitLoaded, addAlert, clearAlerts]);
+  }, [numTokens, toolCount, tokenLimit, isTokenLimitLoaded, addAlert, isCompacting, clearAlerts]);
 
   // Cleanup effect for component unmount - prevent memory leaks
   useEffect(() => {
@@ -1320,8 +1327,6 @@ export default function ChatInput({
               )}
             </>
           )}
-
-
 
           {/* Send/Stop button */}
           {isLoading ? (

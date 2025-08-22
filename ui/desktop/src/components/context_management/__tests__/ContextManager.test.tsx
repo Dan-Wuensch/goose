@@ -48,7 +48,6 @@ describe('ContextManager', () => {
   const mockSetMessages = vi.fn();
   const mockAppend = vi.fn();
   const mockSetAncestorMessages = vi.fn();
-  const mockClearAlerts = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -340,7 +339,7 @@ describe('ContextManager', () => {
   });
 
   describe('handleManualCompaction', () => {
-    it('should clear alerts and perform compaction with server-provided messages', async () => {
+    it('should perform compaction with server-provided messages', async () => {
       mockManageContextFromBackend.mockResolvedValue({
         messages: [
           {
@@ -401,12 +400,10 @@ describe('ContextManager', () => {
           mockMessages,
           mockSetMessages,
           mockAppend,
-          mockClearAlerts,
           mockSetAncestorMessages
         );
       });
 
-      expect(mockClearAlerts).toHaveBeenCalledTimes(1);
       expect(mockManageContextFromBackend).toHaveBeenCalledWith({
         messages: mockMessages,
         manageAction: 'summarize',
@@ -429,35 +426,6 @@ describe('ContextManager', () => {
       expect(mockAppend).toHaveBeenCalledWith(mockContinuationMessage);
     });
 
-    it('should work without clearAlerts function', async () => {
-      mockManageContextFromBackend.mockResolvedValue({
-        messages: [
-          {
-            role: 'assistant',
-            content: [{ type: 'text', text: 'Manual summary content' }],
-          },
-        ],
-        tokenCounts: [100, 50],
-      });
-
-      mockConvertApiMessageToFrontendMessage.mockReturnValue(mockSummaryMessage);
-
-      const { result } = renderContextManager();
-
-      await act(async () => {
-        await result.current.handleManualCompaction(
-          mockMessages,
-          mockSetMessages,
-          mockAppend,
-          undefined, // No clearAlerts function
-          mockSetAncestorMessages
-        );
-      });
-
-      expect(mockManageContextFromBackend).toHaveBeenCalled();
-      // Should not throw error when clearAlerts is undefined
-    });
-
     it('should work without append function', async () => {
       mockManageContextFromBackend.mockResolvedValue({
         messages: [
@@ -478,7 +446,6 @@ describe('ContextManager', () => {
           mockMessages,
           mockSetMessages,
           undefined, // No append function
-          mockClearAlerts,
           mockSetAncestorMessages
         );
       });

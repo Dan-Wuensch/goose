@@ -17,6 +17,7 @@ export interface Alert {
     total: number;
   };
   showCompactButton?: boolean;
+  compactButtonDisabled?: boolean;
   onCompact?: () => void;
   compactIcon?: React.ReactNode;
 }

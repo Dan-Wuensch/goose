@@ -150,6 +150,27 @@ export default function BottomMenuAlertPopover({ alerts }: AlertPopoverProps) {
     };
   }, [isOpen]);
 
+  // Listen for custom event to hide the popover
+  useEffect(() => {
+    const handleHidePopover = () => {
+      if (isOpen) {
+        setIsOpen(false);
+        setWasAutoShown(false);
+        setIsHovered(false);
+        // Clear any pending hide timer
+        if (hideTimerRef.current) {
+          clearTimeout(hideTimerRef.current);
+          hideTimerRef.current = null;
+        }
+      }
+    };
+
+    window.addEventListener('hide-alert-popover', handleHidePopover);
+    return () => {
+      window.removeEventListener('hide-alert-popover', handleHidePopover);
+    };
+  }, [isOpen]);
+
   // Use shouldShowIndicator instead of alerts.length for rendering decision
   if (!shouldShowIndicator) {
     return null;

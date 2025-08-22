@@ -401,7 +401,6 @@ function BaseChatContent({
                                 messages,
                                 setMessages,
                                 append,
-                                undefined, // clearAlerts - not needed here since we don't have alerts to clear
                                 setAncestorMessages
                               );
                             }}
