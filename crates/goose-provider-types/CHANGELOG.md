@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0-alpha.13](https://github.com/Dan-Wuensch/goose/compare/gdk-v0.1.0-alpha.12...gdk-v0.1.0-alpha.13) - 2026-10-14
+
+### Other
+
+- *(release)* bump version to 1.55.0 (minor) ([#12863](https://github.com/Dan-Wuensch/goose/pull/12863))
+
 ## [0.1.0-alpha.12](https://github.com/aaif-goose/goose/compare/gdk-v0.1.0-alpha.11...gdk-v0.1.0-alpha.12) - 2026-10-13
 
 ### Added
